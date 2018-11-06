@@ -38,12 +38,12 @@ dependencies {
 }
 
 task run(type: Exec) {
-    description('run payara')
+    description('run payara-micro')
     shouldRunAfter('clean', 'war')
     dependsOn('war')
 
     String suffix = "${getDeployCommand(project)} --autoBindHttp"
-    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['bash', '-c']
+    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['sh', '-c']
     String[] command = prefix + [suffix]
     commandLine command
 }
@@ -54,7 +54,7 @@ task makeJarNotWar(type: Exec) {
     dependsOn('war')
 
     String suffix = "${getDeployCommand(project)} --outputUberJar ${getLibsDir(project)}/${getOutputUberJar(project)}"
-    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['bash', '-c']
+    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['sh', '-c']
     String[] command = prefix + [suffix]
     commandLine command
 }
