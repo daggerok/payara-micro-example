@@ -49,7 +49,7 @@ task run(type: Exec) {
 }
 
 task makeJarNotWar(type: Exec) {
-    description('build payara jar from war')
+    description('build payara uber jar from war')
     shouldRunAfter('clean', 'war')
     dependsOn('war')
 
