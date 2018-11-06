@@ -19,28 +19,15 @@ static String[] getCommand(String... suffix) {
 }
 
 apply plugin: 'base'
-
 defaultTasks('clean', 'makeJarNotWar')
 
-clean.doFirst {
-    delete "${getLibsDir(project)}/${getOutputUberJar(project)}" as String
-}
-
 apply plugin: 'war'
+// workaround for context-root: '/'
+war.archiveName = 'ROOT.war'
 
-war {
-    // workaround for context-root: '/'
-    archiveName = 'ROOT.war'
-}
-
-configurations {
-    payaraMicro
-}
-
-dependencies {
-    // 5.183 is broken, Uber Jar is fixed with 5.184
-    payaraMicro 'fish.payara.extras:payara-micro:5.182'
-}
+configurations { payaraMicro }
+// 5.183 is broken, Uber Jar is fixed with 5.184
+dependencies { payaraMicro 'fish.payara.extras:payara-micro:5.182' }
 
 task run(type: Exec) {
     description('run payara-micro')
@@ -55,10 +42,3 @@ task makeJarNotWar(type: Exec) {
     dependsOn('war')
     commandLine getCommand("${getDeployCommand(project)} --outputUberJar ${getLibsDir(project)}/${getOutputUberJar(project)}")
 }
-
-/*
-    read more about payara and payara-micro here:
-    - https://info.payara.fish/payara-micro-data-sheet
-    - https://www.payara.fish/
-    - https://github.com/payara/Payara
- */
