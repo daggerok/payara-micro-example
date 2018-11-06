@@ -9,15 +9,11 @@ env:
 language: java
 jdk: oraclejdk8
 
-service:
-- docker
-
 addons:
   apt:
     packages:
     - bash
     - curl
-    - docker-ce
 
 install: true
 before_install:
@@ -25,7 +21,7 @@ before_install:
 - sudo apt-get install -yqq --no-install-suggests --no-install-recommends
   tree jq python-pip curl bash sudo >/dev/null
 #
-- sudo pip install docker-compose httpie >/dev/null 2>&1
+- sudo pip install httpie >/dev/null 2>&1
 #
 - source <(curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash)
 - stop_any 8080 3000 80 >/dev/null
@@ -36,7 +32,7 @@ script:
 - ./gradlew >/dev/null
 - java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005  -Djava.net.preferIPv4Stack=true ./build/libs/*-uber.jar &
 - wait_for 8080
-- sleep 10
+- sleep 15
 - http :8080 string=one
 - http :8080 string=two
 - http :8080 string=three
