@@ -1,0 +1,58 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+static String getDeployCommand(Project project) {
+    def payaraMicroJar = project.configurations.payaraMicro.asPath
+    "java -jar ${payaraMicroJar} --autoBindHttp --deploy ${getLibsDir(project)}/${project.war.archiveName}"
+}
+
+static String getLibsDir(Project project) {
+    "${project.buildDir}/libs"
+}
+
+static String getOutputUberJar(Project project) {
+    "${project.name}-uber.jar"
+}
+
+apply plugin: 'base'
+
+clean.doFirst {
+    delete "${getLibsDir(project)}/${getOutputUberJar(project)}" as String
+}
+
+apply plugin: 'war'
+
+war {
+    // workaround for context-root: '/'
+    archiveName = 'ROOT.war'
+}
+
+configurations {
+    payaraMicro
+}
+
+dependencies {
+    // 5.183 is broken, Uber Jar is fixed with 5.184
+    payaraMicro 'fish.payara.extras:payara-micro:5.182'
+}
+
+task makeJarNotWar(type: Exec) {
+    description('Payara: make jar not war')
+    shouldRunAfter('clean', 'war')
+    dependsOn('war')
+
+    String deployCommand = getDeployCommand(project)
+    String suffix = "${deployCommand} --outputUberJar ${getLibsDir(project)}/${getOutputUberJar(project)}"
+    //println suffix
+    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['bash', '-c']
+    String[] command = prefix + [suffix]
+    commandLine command
+}
+
+defaultTasks('clean', 'makeJarNotWar')
+
+/*
+    read more about payara and payara-micro here:
+    - https://info.payara.fish/payara-micro-data-sheet
+    - https://www.payara.fish/
+    - https://github.com/payara/Payara
+ */

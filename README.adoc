@@ -1,0 +1,46 @@
+= payara-gradle-app
+
+.build ROOT.war and deploy it into *-uber.jar
+[source,bash]
+----
+./gradlew clean makeJarNotWar
+
+ls -lah ./build/libs | grep jar
+----
+
+.run (with remote debug for example)
+[source,bash]
+----
+java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005  -Djava.net.preferIPv4Stack=true ./build/libs/*-uber.jar
+----
+
+.test: post new data
+[source,bash]
+----
+http :8080 string=one
+http :8080 string=two
+http :8080 string=3
+# output:
+HTTP/1.1 202 Accepted
+Content-Length: 0
+Server: Payara Micro #badassfish
+X-Frame-Options: SAMEORIGIN
+----
+
+.test: verify
+[source,bash]
+----
+http :8080
+# output
+HTTP/1.1 200 OK
+Content-Length: 17
+Content-Type: application/json
+Server: Payara Micro #badassfish
+X-Frame-Options: SAMEORIGIN
+
+[
+    "two",
+    "one",
+    "3"
+]
+----

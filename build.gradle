@@ -1,0 +1,50 @@
+buildscript {
+    ext {
+        log4jVersion = '2.8.2'
+        junitJupiterVersion = '5.3.1'
+    }
+}
+
+plugins {
+    id 'war'
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+}
+
+lombok.version = '1.18.4'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.junit:junit-bom:$junitJupiterVersion"
+    }
+}
+
+version '1.0.0-SNAPSHOT'
+group 'com.github.daggerok'
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+wrapper {
+    gradleVersion = '5.0-rc-1' // For more details see https://docs.gradle.org/5.0-rc-1/release-notes.html
+    distributionType = 'BIN'
+}
+
+dependencies {
+    providedCompile 'javax:javaee-api:8.0'
+
+    // read more: https://jersey.github.io/documentation/latest/media.html#json.jackson
+    implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.7'
+    
+    implementation "org.apache.logging.log4j:log4j-api:$log4jVersion",
+        "org.apache.logging.log4j:log4j-core:$log4jVersion"
+
+    testImplementation 'org.assertj:assertj-core:3.11.1' ,
+        'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine',
+        'org.junit.vintage:junit-vintage-engine:4.12.3'
+}
+
+apply from: project.file('./payara.gradle')
