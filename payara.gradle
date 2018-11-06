@@ -13,6 +13,11 @@ static String getOutputUberJar(Project project) {
     "${project.name}-uber.jar"
 }
 
+static String[] getCommand(String... suffix) {
+    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['sh', '-c']
+    prefix + suffix
+}
+
 apply plugin: 'base'
 
 defaultTasks('clean', 'makeJarNotWar')
@@ -41,22 +46,14 @@ task run(type: Exec) {
     description('run payara-micro')
     shouldRunAfter('clean', 'war')
     dependsOn('war')
-
-    String suffix = "${getDeployCommand(project)} --autoBindHttp"
-    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['sh', '-c']
-    String[] command = prefix + [suffix]
-    commandLine command
+    commandLine getCommand("${getDeployCommand(project)} --autoBindHttp")
 }
 
 task makeJarNotWar(type: Exec) {
     description('build payara uber jar from war')
     shouldRunAfter('clean', 'war')
     dependsOn('war')
-
-    String suffix = "${getDeployCommand(project)} --outputUberJar ${getLibsDir(project)}/${getOutputUberJar(project)}"
-    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['sh', '-c']
-    String[] command = prefix + [suffix]
-    commandLine command
+    commandLine getCommand("${getDeployCommand(project)} --outputUberJar ${getLibsDir(project)}/${getOutputUberJar(project)}")
 }
 
 /*
