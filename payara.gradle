@@ -15,6 +15,8 @@ static String getOutputUberJar(Project project) {
 
 apply plugin: 'base'
 
+defaultTasks('clean', 'makeJarNotWar')
+
 clean.doFirst {
     delete "${getLibsDir(project)}/${getOutputUberJar(project)}" as String
 }
@@ -35,20 +37,27 @@ dependencies {
     payaraMicro 'fish.payara.extras:payara-micro:5.182'
 }
 
-task makeJarNotWar(type: Exec) {
-    description('Payara: make jar not war')
+task run(type: Exec) {
+    description('run payara')
     shouldRunAfter('clean', 'war')
     dependsOn('war')
 
-    String deployCommand = getDeployCommand(project)
-    String suffix = "${deployCommand} --outputUberJar ${getLibsDir(project)}/${getOutputUberJar(project)}"
-    //println suffix
+    String suffix = "${getDeployCommand(project)} --autoBindHttp"
     String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['bash', '-c']
     String[] command = prefix + [suffix]
     commandLine command
 }
 
-defaultTasks('clean', 'makeJarNotWar')
+task makeJarNotWar(type: Exec) {
+    description('build payara jar from war')
+    shouldRunAfter('clean', 'war')
+    dependsOn('war')
+
+    String suffix = "${getDeployCommand(project)} --outputUberJar ${getLibsDir(project)}/${getOutputUberJar(project)}"
+    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['bash', '-c']
+    String[] command = prefix + [suffix]
+    commandLine command
+}
 
 /*
     read more about payara and payara-micro here:
