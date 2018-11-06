@@ -1,4 +1,4 @@
-= payara-gradle-app
+= payara-gradle-app image:https://travis-ci.org/daggerok/payara-gradle-app.svg?branch=master["Build Status", link="https://travis-ci.org/daggerok/payara-gradle-app"]
 
 .build ROOT.war and deploy it into *-uber.jar
 [source,bash]
