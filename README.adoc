@@ -46,3 +46,11 @@ X-Frame-Options: SAMEORIGIN
     "3"
 ]
 ----
+
+.gradle run
+[source,bash]
+----
+./gradlew run
+----
+
+TIP: see link:./payara.gradle[Payara Gradle] build file for details.
