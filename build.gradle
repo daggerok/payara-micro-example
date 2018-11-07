@@ -29,6 +29,8 @@ wrapper {
 dependencies {
   providedCompile 'javax:javaee-api:8.0'
 
+  implementation 'org.webjars:materializecss:1.0.0'
+  implementation 'org.webjars:material-design-icons:3.0.1'
   //read more: https://jersey.github.io/documentation/latest/media.html#json.jackson
   implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.7'
 
