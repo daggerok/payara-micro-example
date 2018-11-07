@@ -1,5 +1,7 @@
 package com.github.daggerok.app;
 
+import lombok.extern.java.Log;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
@@ -13,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
+@Log
 @Startup
 @Singleton
 @ApplicationScoped
@@ -24,6 +27,7 @@ public class MyRepository {
   @PostConstruct
   public void init() {
     db = new ConcurrentHashMap<>();
+    log.info("database initialized.");
   }
 
   public Collection<String> getStrings() {

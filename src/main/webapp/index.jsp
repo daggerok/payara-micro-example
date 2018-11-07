@@ -7,10 +7,20 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-  <head>
-    <title>$Title$</title>
-  </head>
-  <body>
-  $END$
-  </body>
+<head>
+  <title>Payara Micro</title>
+</head>
+<body>
+<div id="app"></div>
+<script>
+  (function ready() {
+    document.addEventListener('DOMContentLoaded', function (evt) {
+      fetch('/v1')
+        .then(function (data) {
+          document.querySelector('#app').textContent = data.text();
+        });
+    }, false);
+  }());
+</script>
+</body>
 </html>
