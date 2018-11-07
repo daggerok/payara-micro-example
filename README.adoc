@@ -51,7 +51,10 @@ X-Frame-Options: SAMEORIGIN
 [source,bash]
 ----
 ./gradlew bundle
+
 ./gradlew start
+# or
+java -jar build/*-microbindle.jar
 ----
 
 TIP: see link:./payara.gradle[Payara Gradle] build file for details.
