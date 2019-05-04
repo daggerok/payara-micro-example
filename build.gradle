@@ -1,43 +1,46 @@
 plugins {
-  id 'war'
-  id 'io.franzbecker.gradle-lombok' version '1.14'
-  id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+  id("war")
+  id("io.franzbecker.gradle-lombok") version "3.0.0"
+  id("com.github.ben-manes.versions") version "0.21.0"
+  id("io.spring.dependency-management") version "1.0.7.RELEASE"
 }
 
-lombok.version = '1.18.4'
+lombok {
+  version = project.lombokVersion
+}
 
 dependencyManagement {
   imports {
-    mavenBom 'org.junit:junit-bom:5.3.1'
-    mavenBom 'org.apache.logging.log4j:log4j-bom:2.11.1'
+    mavenBom("org.junit:junit-bom:5.3.1")
+    mavenBom("org.apache.logging.log4j:log4j-bom:2.11.1")
+    mavenBom("org.eclipse.microprofile:microprofile:2.2")
   }
 }
 
-version '1.0.0-SNAPSHOT'
-group 'com.github.daggerok'
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
   mavenCentral()
 }
 
 wrapper {
-  gradleVersion = '5.0-rc-1' // For more details see https://docs.gradle.org/5.0-rc-1/release-notes.html
-  distributionType = 'BIN'
+  gradleVersion = project.gradleWrapperVersion
+  distributionType = Wrapper.DistributionType.BIN
 }
 
 dependencies {
-  providedCompile 'javax:javaee-api:8.0'
+  providedCompile("javax:javaee-api:8.0")
 
-  implementation 'org.webjars:materializecss:1.0.0'
-  implementation 'org.webjars:material-design-icons:3.0.1'
+  implementation("org.webjars:materializecss:1.0.0")
+  implementation("org.webjars:material-design-icons:3.0.1")
   //read more: https://jersey.github.io/documentation/latest/media.html#json.jackson
-  implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.7'
+  implementation("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.8")
 
-  testImplementation 'org.assertj:assertj-core:3.11.1'
-  testImplementation 'org.junit.jupiter:junit-jupiter-api'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-  testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
+  testImplementation("org.assertj:assertj-core:3.11.1")
+  testImplementation("org.junit.jupiter:junit-jupiter-api")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+  testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 }
 
-apply from: project.file('./payara.gradle')
+apply(from: project.file("./payara.gradle"))

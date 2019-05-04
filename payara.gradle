@@ -6,8 +6,7 @@ static String getDeployCommand(Project project) {
 }
 
 static String getLibsDir(Project project) {
-//    "${project.buildDir}/libs"
-    "${project.buildDir}"
+    "${project.buildDir}" // "${project.buildDir}/libs"
 }
 
 static String getOutputUberJar(Project project) {
@@ -15,33 +14,43 @@ static String getOutputUberJar(Project project) {
 }
 
 static String[] getCommand(String... suffix) {
-    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['sh', '-c']
+    String[] prefix = Os.isFamily(Os.FAMILY_WINDOWS) ? ["cmd", "/c"] : ["sh", "-c"]
     prefix + suffix
 }
 
-apply plugin: 'base'
-defaultTasks('clean', 'bundle')
+apply(plugin: "base")
+defaultTasks("clean", "bundle")
 
-apply plugin: 'war'
-// workaround for context-root: '/'
-war.archiveName = 'ROOT.war'
+apply plugin: "war"
+// workaround for context-root: "/"
+war {
+    archiveName = "ROOT.war"
+}
 
-configurations { payaraMicro }
+configurations {
+    payaraMicro
+}
 // 5.183 is broken, Uber Jar is fixed with 5.184
-dependencies { payaraMicro 'fish.payara.extras:payara-micro:5.182' }
+dependencies {
+    payaraMicro "fish.payara.extras:payara-micro:5.182"
+}
 
 task bundle(type: Exec) {
-    description('build payara uber jar from war')
-    shouldRunAfter('clean', 'war')
-    dependsOn('war')
     commandLine getCommand("${getDeployCommand(project)} --outputUberJar ${getOutputUberJar(project)}")
+
+    group = "PayaraMicro"
+    description = "build payara uber jar from war"
+    shouldRunAfter("clean", "war")
+    dependsOn("war")
 }
 
 task start(type: Exec) {
-    description("java -jar ${getOutputUberJar(project)}")
-    shouldRunAfter('clean', 'war', 'bundle')
-    dependsOn('bundle')
     commandLine getCommand("java -jar ${getOutputUberJar(project)}")
+
+    group = "PayaraMicro"
+    description = "java -jar ${getOutputUberJar(project)}"
+    shouldRunAfter("clean", "war", "bundle")
+    dependsOn("bundle")
 }
 
 assemble.dependsOn(bundle)
