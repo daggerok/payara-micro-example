@@ -57,7 +57,7 @@ X-Frame-Options: SAMEORIGIN
 java -jar build/*-microbindle.jar
 ----
 
-TIP: see link:./payara.gradle[Payara Gradle] build file for details.
+TIP: see link:https://github.com/daggerok/payara-micro-example/blob/master/build.gradle.kts#L25[Payara Gradle] build file for details.
 
 .maven usage
 [source,bash]
