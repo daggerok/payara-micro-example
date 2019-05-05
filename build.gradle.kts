@@ -5,7 +5,6 @@ plugins {
   base
   id("io.franzbecker.gradle-lombok") version "3.0.0"
   id("com.github.ben-manes.versions") version "0.21.0"
-  id("io.spring.dependency-management") version "1.0.7.RELEASE"
 }
 
 lombok {
