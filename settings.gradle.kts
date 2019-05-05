@@ -5,3 +5,5 @@ pluginManagement {
     mavenCentral()
   }
 }
+
+rootProject.name = "payara-micro-example"
