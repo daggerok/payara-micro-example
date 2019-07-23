@@ -3,13 +3,18 @@ import org.apache.tools.ant.taskdefs.condition.Os
 plugins {
   war
   base
-  id("io.franzbecker.gradle-lombok") version "3.0.0"
-  id("com.github.ben-manes.versions") version "0.21.0"
+  id("io.franzbecker.gradle-lombok") version Globals.lombokPluginVersion
+  id("com.github.ben-manes.versions") version Globals.versionsPluginVersion
+  // ./gradlew dependencyUpdates -Drevision=release
+}
+
+allprojects {
+  group = Globals.groupId
+  version = Globals.version
 }
 
 lombok {
-  val lombokVersion: String by project
-  version = lombokVersion
+  version = Globals.lombokVersion
 }
 
 java {
@@ -26,31 +31,33 @@ configurations {
   payaraMicro
 }
 
+fun isAfterJdk8(): Boolean {
+  val currentJavaVersion = org.gradle.internal.jvm.Jvm.current().javaVersion ?: JavaVersion.VERSION_1_8
+  return currentJavaVersion.ordinal > JavaVersion.VERSION_1_8.ordinal
+}
+
 dependencies {
+  if (isAfterJdk8()) {
+    implementation("javax.annotation:javax.annotation-api:1.3.2")
+    implementation("javax.xml.bind:jaxb-api:2.3.1")
+    implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
+    implementation("org.javassist:javassist:3.23.1-GA")
+    implementation("cglib:cglib-nodep:3.2.7")
+  }
   // 5.183 is broken, Uber Jar is fixed with 5.184
-  val payaraMicroVersion: String by project
-  payaraMicro("fish.payara.extras:payara-micro:$payaraMicroVersion")
+  payaraMicro("fish.payara.extras:payara-micro:${Globals.payaraMicroVersion}")
 
-  val log4jVersion: String by project
-  val javaeeVersion: String by project
-  val jacksonVersion: String by project
-  val assertjVersion: String by project
-  val junitJupiterVersion: String by project
-  val microprofileVersion: String by project
-  val materializecssVersion: String by project
-  val materialDesignIconsVersion: String by project
+  implementation(platform("org.junit:junit-bom:${Globals.junitJupiterVersion}"))
+  implementation(platform("org.apache.logging.log4j:log4j-bom:${Globals.log4jVersion}"))
+  implementation(platform("org.eclipse.microprofile:microprofile:${Globals.microprofileVersion}"))
 
-  implementation(platform("org.junit:junit-bom:$junitJupiterVersion"))
-  implementation(platform("org.apache.logging.log4j:log4j-bom:$log4jVersion"))
-  implementation(platform("org.eclipse.microprofile:microprofile:$microprofileVersion"))
+  providedCompile("javax:javaee-api:${Globals.javaeeVersion}")
 
-  providedCompile("javax:javaee-api:$javaeeVersion")
+  implementation("org.webjars:materializecss:${Globals.materializecssVersion}")
+  implementation("org.webjars:material-design-icons:${Globals.materialDesignIconsVersion}")
+  implementation("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${Globals.jacksonVersion}")
 
-  implementation("org.webjars:materializecss:$materializecssVersion")
-  implementation("org.webjars:material-design-icons:$materialDesignIconsVersion")
-  implementation("com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:$jacksonVersion")
-
-  testImplementation("org.assertj:assertj-core:$assertjVersion")
+  testImplementation("org.assertj:assertj-core:${Globals.assertjVersion}")
   testImplementation("org.junit.jupiter:junit-jupiter-api")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
   testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
@@ -74,6 +81,8 @@ tasks {
     return prefix.plus(suffix).toList()
   }
 
+  println("${org.gradle.internal.jvm.Jvm.current()} / ${org.gradle.util.GradleVersion.current()}")
+
   register("bundle", Exec::class.java) {
     group = "PayaraMicro"
     description = "build payara uber jar from war"
@@ -84,8 +93,18 @@ tasks {
 
   register("start", Exec::class.java) {
     group = "PayaraMicro"
+    val jdk9Opts = if (!isAfterJdk8()) ""
+    else "--add-modules java.se" +
+        " --add-exports java.base/jdk.internal.ref=ALL-UNNAMED" +
+        " --add-opens java.base/java.lang=ALL-UNNAMED" +
+        " --add-opens java.base/java.nio=ALL-UNNAMED" +
+        " --add-opens java.base/sun.nio.ch=ALL-UNNAMED" +
+        " --add-opens java.management/sun.management=ALL-UNNAMED" +
+        " --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED" +
+        " --add-opens java.base/jdk.internal.loader=ALL-UNNAMED" +
+        " --add-opens jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED"
     description = "java -jar $getOutputUberJar"
-    commandLine(getCommand("java -jar $getOutputUberJar"))
+    commandLine(getCommand("java $jdk9Opts -jar $getOutputUberJar"))
     shouldRunAfter("clean", "war", "bundle")
     dependsOn("bundle")
   }
@@ -98,8 +117,7 @@ tasks {
   }
 
   withType<Wrapper> {
-    val gradleWrapperVersion: String by project
-    gradleVersion = gradleWrapperVersion
+    gradleVersion = Globals.gradleWrapperVersion
     distributionType = Wrapper.DistributionType.BIN
   }
 }

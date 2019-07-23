@@ -6,4 +6,4 @@ import javax.ws.rs.core.Application;
 
 @ApplicationScoped
 @ApplicationPath("v1")
-public class PayaraGradleAppConfig extends Application { }
+public class PayaraAppConfig extends Application { }

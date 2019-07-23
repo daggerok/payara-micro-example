@@ -35,31 +35,68 @@ before_install:
   #
   - source <(curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash)
   - stop_any 80 8080 3000 >/dev/null
-script:
+  #
   - export root=$(pwd)
-  #
-  - ./gradlew >/dev/null
-  - java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Djava.net.preferIPv4Stack=true ./build/*-microbundle.jar &
-  - wait_for 8080
-  - sleep 30
-  - http :8080
-  - http :8080/v1 string=one
-  - http :8080/v1 string=two
-  - http :8080/v1 string=three
-  - http :8080/v1
-  - stop_any 80 8080
-  #
-  - ./mvnw >/dev/null
-  - ./mvnw -Pbundle
-  - java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Djava.net.preferIPv4Stack=true ./target/*-microbundle.jar &
-  - wait_for 8080
-  - sleep 30
-  - http :8080/v1 string=one
-  - http :8080/v1 string=two
-  - http :8080/v1 string=three
-  - http :8080/v1
-  - http :8080
-  - stop_any 80 8080
+jobs:
+  include:
+    - stage: test
+      jdk: openjdk8
+      name: test gradle
+      script:
+        - ./gradlew >/dev/null
+        - java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Djava.net.preferIPv4Stack=true ./build/*-microbundle.jar &
+        - wait_for 8080
+        - sleep 30
+        - http :8080
+        - http :8080/v1 string=one
+        - http :8080/v1 string=two
+        - http :8080/v1 string=three
+        - http :8080/v1
+        - stop_any 80 8080
+    - stage: test
+      jdk: openjdk8
+      name: test maven
+      script:
+        - ./mvnw -U
+        - ./mvnw -Pbundle
+        - java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Djava.net.preferIPv4Stack=true ./target/*-microbundle.jar &
+        - wait_for 8080
+        - sleep 30
+        - http :8080/v1 string=one
+        - http :8080/v1 string=two
+        - http :8080/v1 string=three
+        - http :8080/v1
+        - http :8080
+        - stop_any 80 8080
+    - stage: test
+      jdk: openjdk11
+      name: test gradle (openjdk11)
+      script:
+        - ./gradlew >/dev/null
+        - java --add-modules java.se --add-exports java.base/jdk.internal.ref=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.management/sun.management=ALL-UNNAMED --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED --add-opens java.base/jdk.internal.loader=ALL-UNNAMED --add-opens jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Djava.net.preferIPv4Stack=true ./build/*-microbundle.jar &
+        - wait_for 8080
+        - sleep 30
+        - http :8080
+        - http :8080/v1 string=one
+        - http :8080/v1 string=two
+        - http :8080/v1 string=three
+        - http :8080/v1
+        - stop_any 80 8080
+    - stage: test
+      jdk: openjdk11
+      name: test maven (openjdk11)
+      script:
+        - ./mvnw -f ./pom-jdk11.xml -U >/dev/null
+        - ./mvnw -f ./pom-jdk11.xml -Pbundle
+        - java --add-modules java.se --add-exports java.base/jdk.internal.ref=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.management/sun.management=ALL-UNNAMED --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED --add-opens java.base/jdk.internal.loader=ALL-UNNAMED --add-opens jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Djava.net.preferIPv4Stack=true ./target/*-microbundle.jar &
+        - wait_for 8080
+        - sleep 30
+        - http :8080/v1 string=one
+        - http :8080/v1 string=two
+        - http :8080/v1 string=three
+        - http :8080/v1
+        - http :8080
+        - stop_any 80 8080
 cache:
   pip: true
   packages: true

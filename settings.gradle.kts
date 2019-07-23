@@ -6,4 +6,4 @@ pluginManagement {
   }
 }
 
-rootProject.name = "payara-micro-example"
+rootProject.name = Globals.artifactId
