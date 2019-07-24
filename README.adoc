@@ -68,3 +68,5 @@ TIP: see link:https://github.com/daggerok/payara-micro-example/blob/master/build
 # or
 java -jar target/*-microbundle.jar
 ----
+
+see more about [MicroProfiles](https://wiki.eclipse.org/MicroProfile/Implementation)

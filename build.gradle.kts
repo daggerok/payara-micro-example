@@ -37,12 +37,16 @@ fun isAfterJdk8(): Boolean {
 }
 
 dependencies {
-  if (isAfterJdk8()) {
-    implementation("javax.annotation:javax.annotation-api:1.3.2")
-    implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
-    implementation("org.glassfish.jaxb:jaxb-runtime:2.4.0-b180830.0438")
-    implementation("org.javassist:javassist:3.25.0-GA")
-    implementation("cglib:cglib-nodep:3.2.12")
+  // JPA
+  providedCompile("com.h2database:h2:${Globals.h2Version}")
+  providedCompile("javax.persistence:javax.persistence-api:${Globals.javaxPersistenceVersion}")
+
+  if (isAfterJdk8()) { // JDK > 1.8
+    implementation("javax.annotation:javax.annotation-api:${Globals.javaxAnnotationApiVersion}")
+    implementation("javax.xml.bind:jaxb-api:${Globals.jaxbApiVersion}")
+    implementation("org.glassfish.jaxb:jaxb-runtime:${Globals.jaxbRuntimeVersion}")
+    implementation("org.javassist:javassist:${Globals.javassistVersion}")
+    implementation("cglib:cglib-nodep:${Globals.cglibVersion}")
   }
   // 5.183 is broken, Uber Jar is fixed with 5.184
   payaraMicro("fish.payara.extras:payara-micro:${Globals.payaraMicroVersion}")
@@ -93,6 +97,7 @@ tasks {
 
   register("start", Exec::class.java) {
     group = "PayaraMicro"
+    val debugOpts = "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
     val jdk9Opts = if (!isAfterJdk8()) ""
     else "--add-modules java.se" +
         " --add-exports java.base/jdk.internal.ref=ALL-UNNAMED" +
@@ -104,7 +109,7 @@ tasks {
         " --add-opens java.base/jdk.internal.loader=ALL-UNNAMED" +
         " --add-opens jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED"
     description = "java -jar $getOutputUberJar"
-    commandLine(getCommand("java $jdk9Opts -jar $getOutputUberJar"))
+    commandLine(getCommand("java $debugOpts $jdk9Opts -jar $getOutputUberJar"))
     shouldRunAfter("clean", "war", "bundle")
     dependsOn("bundle")
   }
