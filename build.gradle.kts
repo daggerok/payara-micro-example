@@ -39,10 +39,10 @@ fun isAfterJdk8(): Boolean {
 dependencies {
   if (isAfterJdk8()) {
     implementation("javax.annotation:javax.annotation-api:1.3.2")
-    implementation("javax.xml.bind:jaxb-api:2.3.1")
-    implementation("org.glassfish.jaxb:jaxb-runtime:2.3.2")
-    implementation("org.javassist:javassist:3.23.1-GA")
-    implementation("cglib:cglib-nodep:3.2.7")
+    implementation("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
+    implementation("org.glassfish.jaxb:jaxb-runtime:2.4.0-b180830.0438")
+    implementation("org.javassist:javassist:3.25.0-GA")
+    implementation("cglib:cglib-nodep:3.2.12")
   }
   // 5.183 is broken, Uber Jar is fixed with 5.184
   payaraMicro("fish.payara.extras:payara-micro:${Globals.payaraMicroVersion}")
