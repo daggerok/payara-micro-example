@@ -263,6 +263,10 @@
               <useUberJar>true</useUberJar>
               <javaCommandLineOptions>
                 <option>
+                  <key>-Dlogging.level.liquibase</key>
+                  <value>INFO</value>
+                </option>
+                <option>
                   <key>-Xrunjdwp:transport</key>
                   <value>dt_socket,server=y,suspend=n,address=5005</value>
                 </option>

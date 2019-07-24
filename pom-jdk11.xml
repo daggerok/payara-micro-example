@@ -82,6 +82,12 @@
   </dependencyManagement>
 
   <dependencies>
+    <!-- jul to log4j2 bridge adapter -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-jul</artifactId>
+    </dependency>
+
     <!-- liquibase -->
     <dependency>
       <groupId>org.liquibase</groupId>
