@@ -88,6 +88,20 @@ payaraMicro {
 }
 
 tasks {
+  val warTask = war.get()
+  val cleanTask = clean.get()
+  val assembleTask = assemble.get()
+  val bundleTask = microBundle.get()
+  val startTask = microStart.get()
+
+  startTask.dependsOn(assembleTask.path)
+  assembleTask.dependsOn(warTask.path, bundleTask.path)
+
+  startTask.shouldRunAfter(cleanTask.path, assembleTask.path)
+  assembleTask.shouldRunAfter(cleanTask.path, bundleTask.path)
+  bundleTask.shouldRunAfter(cleanTask.path, warTask.path)
+  warTask.shouldRunAfter(cleanTask.path)
+
   println("${org.gradle.internal.jvm.Jvm.current()} / ${org.gradle.util.GradleVersion.current()}")
 
   this.war {
@@ -107,4 +121,4 @@ tasks {
   }
 }
 
-defaultTasks("clean", "microBundle")
+defaultTasks("clean", "build")
