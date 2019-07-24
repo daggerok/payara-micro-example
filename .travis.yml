@@ -56,6 +56,10 @@ jobs:
         - http :8080/v1 string=two
         - http :8080/v1 string=three
         - http :8080/v1
+        - http :8080/v1/people name=ololo
+        - http :8080/v1/people name=trololo
+        - http :8080/v1/people/2
+        - http :8080/v1/people
         - stop_any 80 8080
     - stage: test
       jdk: openjdk8
@@ -71,6 +75,10 @@ jobs:
         - http :8080/v1 string=three
         - http :8080/v1
         - http :8080
+        - http :8080/v1/people name=ololo
+        - http :8080/v1/people name=trololo
+        - http :8080/v1/people/2
+        - http :8080/v1/people
         - stop_any 80 8080
     - stage: test
       jdk: openjdk8
@@ -89,6 +97,10 @@ jobs:
         - http :8080/v1 string=two
         - http :8080/v1 string=three
         - http :8080/v1
+        - http :8080/v1/people name=ololo
+        - http :8080/v1/people name=trololo
+        - http :8080/v1/people/2
+        - http :8080/v1/people
         - stop_any 80 8080
     - stage: test
       jdk: openjdk11
@@ -104,6 +116,10 @@ jobs:
         - http :8080/v1 string=three
         - http :8080/v1
         - http :8080
+        - http :8080/v1/people name=ololo
+        - http :8080/v1/people name=trololo
+        - http :8080/v1/people/2
+        - http :8080/v1/people
         - stop_any 80 8080
     - stage: test
       jdk: openjdk11
