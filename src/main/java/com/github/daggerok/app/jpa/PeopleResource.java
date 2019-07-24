@@ -1,6 +1,5 @@
 package com.github.daggerok.app.jpa;
 
-import com.github.daggerok.app.MyRepository;
 import lombok.extern.java.Log;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -8,10 +7,10 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.net.URI;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -60,8 +59,8 @@ public class PeopleResource {
     Person newPerson = Person.of(person.getId(), name);
     em.merge(newPerson);
 
-    return Response.accepted(em.find(Person.class, givenId))
-                   .build();
+    Person updated = em.find(Person.class, givenId);
+    return Response.accepted(updated).build();
   }
 
   @GET

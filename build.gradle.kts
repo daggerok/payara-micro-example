@@ -31,6 +31,10 @@ fun isAfterJdk8(): Boolean {
 }
 
 dependencies {
+  // Liquibase
+  implementation("org.liquibase:liquibase-core:${Globals.liquibaseVersion}")
+  implementation("org.liquibase:liquibase-cdi:${Globals.liquibaseVersion}")
+
   // JPA
   implementation("com.h2database:h2:${Globals.h2Version}")
   providedCompile("javax.persistence:javax.persistence-api:${Globals.javaxPersistenceVersion}")

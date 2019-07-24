@@ -15,9 +15,13 @@
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <!-- eclipselink.jdbc.password -->
             <property name="javax.persistence.jdbc.password" value="sa"/>
-
-            <property name="eclipselink.ddl-generation" value="create-tables"/>
             <!--<property name="javax.persistence.schema-generation.database.action" value="create"/>-->
+            <!--<property name="eclipselink.ddl-generation" value="create-tables"/>-->
+            <property name="eclipselink.ddl-generation" value="none"/>
+            <!--<property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>-->
+            <!--<property name="eclipselink.create-ddl-jdbc-file-name" value="createDDL_ddlGeneration.jdbc"/>-->
+            <!--<property name="eclipselink.drop-ddl-jdbc-file-name" value="dropDDL_ddlGeneration.jdbc"/>-->
+            <property name="eclipselink.ddl-generation.output-mode" value="both"/>
         </properties>
     </persistence-unit>
 </persistence>

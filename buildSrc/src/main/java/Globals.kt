@@ -1,5 +1,5 @@
 object Globals {
-  const val version = "3.0.3-SNAPSHOT"
+  const val version = "3.0.4-SNAPSHOT"
   const val groupId = "com.github.daggerok.payaramicro"
   const val artifactId = "payara-micro-example"
 
@@ -27,4 +27,6 @@ object Globals {
   const val jaxbRuntimeVersion = "2.4.0-b180830.0438"
   const val javassistVersion = "3.25.0-GA"
   const val cglibVersion = "3.2.12"
+
+  const val liquibaseVersion = "3.7.0"
 }

@@ -7,7 +7,7 @@
   <name>payara-micrio-example</name>
   <groupId>com.github.daggerok.payaramicro</groupId>
   <artifactId>payara-micrio-example</artifactId>
-  <version>3.0.3-SNAPSHOT</version>
+  <version>3.0.4-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <properties>
@@ -30,6 +30,7 @@
     <javaee.version>8.0.1</javaee.version>
     <lombok.version>1.18.8</lombok.version>
     <assertj.version>3.12.2</assertj.version>
+    <liquibase.version>3.7.0</liquibase.version>
     <payara.micro.version>5.192</payara.micro.version>
     <materializecss.version>1.0.0</materializecss.version>
     <maven-war-plugin.version>3.2.3</maven-war-plugin.version>
@@ -76,6 +77,18 @@
   </dependencyManagement>
 
   <dependencies>
+    <!-- liquibase -->
+    <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+      <version>${liquibase.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-cdi</artifactId>
+      <version>${liquibase.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
@@ -249,9 +262,6 @@
               <payaraVersion>${payara.micro.version}</payaraVersion>
               <useUberJar>true</useUberJar>
               <javaCommandLineOptions>
-                <option>
-                  <value>-Xdebug</value>
-                </option>
                 <option>
                   <key>-Xrunjdwp:transport</key>
                   <value>dt_socket,server=y,suspend=n,address=5005</value>

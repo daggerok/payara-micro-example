@@ -17,17 +17,21 @@ import java.io.Serializable;
         query = "select p from Person p"
     ),
     @NamedQuery(
-        name = Person.FIND_BY_NAME,
+        name = Person.FIND_ALL_BY_NAME,
         query = "select p from Person p where p.name = :name"
     ),
 })
 public class Person implements Serializable {
 
   public static final String FIND_ALL = "Person.findAll";
-  public static final String FIND_BY_NAME = "Person.findByName";
+  public static final String FIND_ALL_BY_NAME = "Person.findByName";
 
   @Id
-  @GeneratedValue
+  @Column(nullable = false)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "people_sequence")
+  @SequenceGenerator(name = "people_sequence", sequenceName = "people_sequence", allocationSize = 1)
   private Long id;
+
+  @Column(nullable = false, length = 36)
   private String name;
 }

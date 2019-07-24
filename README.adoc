@@ -69,4 +69,10 @@ TIP: see link:https://github.com/daggerok/payara-micro-example/blob/master/build
 java -jar target/*-microbundle.jar
 ----
 
-see more about [MicroProfiles](https://wiki.eclipse.org/MicroProfile/Implementation)
+links:
+
+- see more about [MicroProfiles](https://wiki.eclipse.org/MicroProfile/Implementation)
+- [Payara Gradle plugin](https://docs.payara.fish/documentation/ecosystem/gradle-plugin.html)
+- [Liquibase](https://www.liquibase.org/documentation/includeall.html)
+- [EclipseLink Examples](https://wiki.eclipse.org/EclipseLink/Examples)
+- [EclipseLink DDL](https://www.eclipse.org/eclipselink/documentation/2.5/jpa/extensions/p_ddl_generation.htm)
