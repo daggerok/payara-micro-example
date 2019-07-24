@@ -7,7 +7,7 @@
   <name>payara-micrio-example</name>
   <groupId>com.github.daggerok.payaramicro</groupId>
   <artifactId>payara-micrio-example</artifactId>
-  <version>3.0.2-SNAPSHOT</version>
+  <version>3.0.3-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <properties>

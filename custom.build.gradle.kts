@@ -1,9 +1,10 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
   war
   base
   id("io.franzbecker.gradle-lombok") version Globals.lombokPluginVersion
   id("com.github.ben-manes.versions") version Globals.versionsPluginVersion
-  id("fish.payara.micro-gradle-plugin") version Globals.payaraMicroPluginVersion
   // ./gradlew dependencyUpdates -Drevision=release
 }
 
@@ -25,6 +26,11 @@ repositories {
   mavenCentral()
 }
 
+val payaraMicro by configurations.creating
+configurations {
+  payaraMicro
+}
+
 fun isAfterJdk8(): Boolean {
   val currentJavaVersion = org.gradle.internal.jvm.Jvm.current().javaVersion ?: JavaVersion.VERSION_1_8
   return currentJavaVersion.ordinal > JavaVersion.VERSION_1_8.ordinal
@@ -32,7 +38,7 @@ fun isAfterJdk8(): Boolean {
 
 dependencies {
   // JPA
-  implementation("com.h2database:h2:${Globals.h2Version}")
+  providedCompile("com.h2database:h2:${Globals.h2Version}")
   providedCompile("javax.persistence:javax.persistence-api:${Globals.javaxPersistenceVersion}")
 
   if (isAfterJdk8()) { // JDK > 1.8
@@ -42,6 +48,8 @@ dependencies {
     implementation("org.javassist:javassist:${Globals.javassistVersion}")
     implementation("cglib:cglib-nodep:${Globals.cglibVersion}")
   }
+  // 5.183 is broken, Uber Jar is fixed with 5.184
+  payaraMicro("fish.payara.extras:payara-micro:${Globals.payaraMicroVersion}")
 
   implementation(platform("org.junit:junit-bom:${Globals.junitJupiterVersion}"))
   implementation(platform("org.apache.logging.log4j:log4j-bom:${Globals.log4jVersion}"))
@@ -59,39 +67,51 @@ dependencies {
   testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 }
 
-val defaultJavaOpts = mapOf(
-  "Xdebug" to null,
-  "Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005" to null
-)
-val java9plusOpts = mapOf(
-  "-illegal-access=permit" to null,
-  "-add-modules=java.se" to null,
-  "-add-exports=java.base/jdk.internal.ref=ALL-UNNAMED" to null,
-  "-add-opens=java.base/java.lang=ALL-UNNAMED" to null,
-  "-add-opens=java.base/java.nio=ALL-UNNAMED" to null,
-  "-add-opens=java.base/sun.nio.ch=ALL-UNNAMED" to null,
-  "-add-opens=java.management/sun.management=ALL-UNNAMED" to null,
-  "-add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED" to null,
-  "-add-opens=java.base/jdk.internal.loader=ALL-UNNAMED" to null,
-  "-add-opens=jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED" to null
-)
-
-payaraMicro {
-  daemon = false
-  deployWar = false
-  useUberJar = true
-  payaraVersion = Globals.payaraMicroVersion
-  commandLineOptions = mapOf("port" to 8080)
-  javaCommandLineOptions =
-      if (!isAfterJdk8()) defaultJavaOpts
-      else defaultJavaOpts.plus(java9plusOpts)
-}
-
 tasks {
-  println("${org.gradle.internal.jvm.Jvm.current()} / ${org.gradle.util.GradleVersion.current()}")
-
+  assemble.get().dependsOn("bundle")
+  // https://docs.gradle.org/current/userguide/war_plugin.html
+  // workaround for context-root: "/"
   this.war {
     archiveFileName.set("ROOT.war")
+  }
+
+  val payaraMicroJar = configurations["payaraMicro"].asPath
+  val getDeployCommand = "java -jar $payaraMicroJar --autoBindHttp --clusterName app --deploy ${this.container.war.get().archiveFile.get()}"
+  val getOutputUberJar = "$buildDir/$name-$version-microbundle.jar"
+
+  fun getCommand(vararg suffix: String): Iterable<String> {
+    val prefix = if (Os.isFamily(Os.FAMILY_WINDOWS)) 
+      arrayOf("cmd", "/c") else arrayOf("sh", "-c")
+    return prefix.plus(suffix).toList()
+  }
+
+  println("${org.gradle.internal.jvm.Jvm.current()} / ${org.gradle.util.GradleVersion.current()}")
+
+  register("bundle", Exec::class.java) {
+    group = "PayaraMicro"
+    description = "build payara uber jar from war"
+    commandLine(getCommand("$getDeployCommand --outputUberJar $getOutputUberJar"))
+    shouldRunAfter("clean", "war")
+    dependsOn("war")
+  }
+
+  register("start", Exec::class.java) {
+    group = "PayaraMicro"
+    val debugOpts = "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
+    val jdk9Opts = if (!isAfterJdk8()) ""
+    else "--add-modules java.se" +
+        " --add-exports java.base/jdk.internal.ref=ALL-UNNAMED" +
+        " --add-opens java.base/java.lang=ALL-UNNAMED" +
+        " --add-opens java.base/java.nio=ALL-UNNAMED" +
+        " --add-opens java.base/sun.nio.ch=ALL-UNNAMED" +
+        " --add-opens java.management/sun.management=ALL-UNNAMED" +
+        " --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED" +
+        " --add-opens java.base/jdk.internal.loader=ALL-UNNAMED" +
+        " --add-opens jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED"
+    description = "java -jar $getOutputUberJar"
+    commandLine(getCommand("java $debugOpts $jdk9Opts -jar $getOutputUberJar"))
+    shouldRunAfter("clean", "war", "bundle")
+    dependsOn("bundle")
   }
 
   named("clean") {
@@ -107,4 +127,4 @@ tasks {
   }
 }
 
-defaultTasks("clean", "microBundle")
+defaultTasks("clean", "bundle")
