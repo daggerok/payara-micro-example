@@ -1,6 +1,6 @@
 package com.github.daggerok.app.jpa;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-@Log
+@Slf4j
 @Path("people")
 @ApplicationScoped
 // @Path("{path: .*?}")
@@ -34,7 +34,7 @@ public class PeopleResource {
   @Transactional
   @Consumes(APPLICATION_JSON)
   public Response createPerson(Map<String, String> request) {
-    log.info("hohoho ");
+    log.info("hohoho {}", request);
 
     String name = request.getOrDefault("name", "");
     Person person = Person.of(null, name);
@@ -51,7 +51,7 @@ public class PeopleResource {
   @Transactional
   @Consumes(APPLICATION_JSON)
   public Response updatePerson(@PathParam("id") Long id, Map<String, String> request) {
-    log.info("trololo");
+    log.info("trololo {}: {}", id, request);
 
     Long givenId = Objects.requireNonNull(id, "id may not be null or non number");
     String name = request.getOrDefault("name", "");
@@ -66,7 +66,7 @@ public class PeopleResource {
   @GET
   @Path("{id}")
   public Person findPerson(@PathParam("id") Long id) {
-    log.info("nonono");
+    log.info("nonono {}", id);
     Long givenId = Objects.requireNonNull(id, "id may not be null or non number");
     return em.find(Person.class, givenId);
   }

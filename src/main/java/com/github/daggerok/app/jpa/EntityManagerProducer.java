@@ -1,6 +1,6 @@
 package com.github.daggerok.app.jpa;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
@@ -9,9 +9,7 @@ import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static java.lang.String.format;
-
-@Log
+@Slf4j
 @ApplicationScoped
 public class EntityManagerProducer {
 
@@ -21,7 +19,7 @@ public class EntityManagerProducer {
   EntityManager entityManager;
 
   public void close(@Disposes EntityManager entityManager) {
-    log.info(format("bye: %s", entityManager));
+    log.info("bye: {}", entityManager);
     entityManager.close();
   }
 }

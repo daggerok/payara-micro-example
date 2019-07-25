@@ -1,6 +1,6 @@
 package com.github.daggerok.app;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-@Log
+@Slf4j
 @Path("")
 @ApplicationScoped
 //@Path("{path: .*?}")
@@ -24,7 +24,7 @@ public class MyResource {
   @Consumes(APPLICATION_JSON)
   public Response createPerson(Map<String, String> request) {
     myRepository.addString(request.getOrDefault("string", ""));
-    log.info("ololo");
+    log.info("ololo {}", request);
     return Response.accepted().build();
   }
 

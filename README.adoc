@@ -13,7 +13,7 @@ ls -lah ./build | grep jar
 .run (with remote debug for example)
 [source,bash]
 ----
-java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005  -Djava.net.preferIPv4Stack=true ./build/*-microbundle.jar
+java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005  -Djava.net.preferIPv4Stack=true ./build/libs/*-microbundle.jar
 ----
 
 .test: post new data
@@ -54,7 +54,7 @@ X-Frame-Options: SAMEORIGIN
 
 ./gradlew start
 # or
-java -jar build/*-microbindle.jar
+java -jar build/libs/*-microbindle.jar
 ----
 
 TIP: see link:https://github.com/daggerok/payara-micro-example/blob/master/build.gradle.kts#L25[Payara Gradle] build file for details.
@@ -71,8 +71,8 @@ java -jar target/*-microbundle.jar
 
 links:
 
-- see more about [MicroProfiles](https://wiki.eclipse.org/MicroProfile/Implementation)
-- [Payara Gradle plugin](https://docs.payara.fish/documentation/ecosystem/gradle-plugin.html)
-- [Liquibase](https://www.liquibase.org/documentation/includeall.html)
-- [EclipseLink Examples](https://wiki.eclipse.org/EclipseLink/Examples)
-- [EclipseLink DDL](https://www.eclipse.org/eclipselink/documentation/2.5/jpa/extensions/p_ddl_generation.htm)
+- see more about link:https://wiki.eclipse.org/MicroProfile/Implementation[MicroProfiles]
+- link:https://docs.payara.fish/documentation/ecosystem/gradle-plugin.html[Payara Gradle plugin]
+- link:https://www.liquibase.org/documentation/includeall.html[Liquibase]
+- link:https://wiki.eclipse.org/EclipseLink/Examples[EclipseLink Examples]
+- link:https://www.eclipse.org/eclipselink/documentation/2.5/jpa/extensions/p_ddl_generation.htm[EclipseLink DDL]

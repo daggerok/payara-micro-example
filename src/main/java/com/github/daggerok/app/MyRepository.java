@@ -1,6 +1,6 @@
 package com.github.daggerok.app;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.ConcurrencyManagement;
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
-@Log
+@Slf4j
 @Startup
 @Singleton
 @ApplicationScoped

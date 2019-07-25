@@ -5,14 +5,14 @@ import liquibase.integration.cdi.annotations.LiquibaseType;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 import lombok.SneakyThrows;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.sql.DataSource;
 
-@Log
+@Slf4j
 @ApplicationScoped
 public class LiquibaseConfig {
 
@@ -22,6 +22,7 @@ public class LiquibaseConfig {
   @Produces
   @LiquibaseType
   public CDILiquibaseConfig cdiLiquibaseConfig() {
+    log.info("create liquibase CDI config.");
     CDILiquibaseConfig config = new CDILiquibaseConfig();
     config.setChangeLog("liquibase/changelog.xml");
     return config;
@@ -31,12 +32,14 @@ public class LiquibaseConfig {
   @SneakyThrows
   @LiquibaseType
   public DataSource dataSource() {
+    log.info("get liquibase datasource.");
     return myDataSource;
   }
 
   @Produces
   @LiquibaseType
   public ResourceAccessor resourceAccessor() {
+    log.info("get liquibase resource accessor.");
     return new ClassLoaderResourceAccessor(getClass().getClassLoader());
   }
 }
