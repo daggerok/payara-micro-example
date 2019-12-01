@@ -1,7 +1,7 @@
 = payara-micro-example image:https://travis-ci.org/daggerok/payara-micro-example.svg?branch=master["Build Status", link="https://travis-ci.org/daggerok/payara-micro-example"]
 
 This is a simple Payara MicroProfile project by using maven and gradle build tools compiling and running on top of
-Java 8 / Java 11
+Java 8 and Java 11
 
 == features
 
