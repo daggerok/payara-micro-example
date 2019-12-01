@@ -1,5 +1,12 @@
 = payara-micro-example image:https://travis-ci.org/daggerok/payara-micro-example.svg?branch=master["Build Status", link="https://travis-ci.org/daggerok/payara-micro-example"]
 
+# my payara-related repositories
+
+* https://github.com/daggerok/payara-micro-gradle-no-plugin
+* https://github.com/daggerok/payara-micro-gradle-plugin-build-script
+* https://github.com/daggerok/payara-micro-example
+* https://github.com/daggerok/microprofile-examples
+
 Stack:
 
 - payara-micro
