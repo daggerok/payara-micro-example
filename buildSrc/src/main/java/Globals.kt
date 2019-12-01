@@ -1,9 +1,8 @@
 object Globals {
   const val version = "3.0.5-SNAPSHOT"
   const val groupId = "com.github.daggerok.payaramicro"
-  const val artifactId = "payara-micro-example"
 
-  const val gradleWrapperVersion = "5.6.4"
+  const val gradleWrapperVersion = "6.0.1"
   const val payaraMicroPluginVersion = "1.0.3"
   const val versionsPluginVersion = "0.27.0"
   const val lombokPluginVersion = "3.2.0"
