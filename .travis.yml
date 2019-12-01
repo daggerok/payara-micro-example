@@ -37,11 +37,7 @@ jobs:
   include:
     - stage: test
       jdk: openjdk8
-      name: gradle updates
-      script: ./gradlew dependencyUpdates -Drevision=release
-    - stage: test
-      jdk: openjdk8
-      name: test gradle
+      name: gradle (openjdk8)
       script:
         - ./gradlew
         - java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
@@ -60,33 +56,8 @@ jobs:
         - http :8080/v1/people
         - stop_any 80 8080
     - stage: test
-      jdk: openjdk8
-      name: test maven
-      script:
-        - ./mvnw -U
-        - ./mvnw -Pbundle
-        - java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
-                    -Djava.net.preferIPv4Stack=true
-                      ./target/*-microbundle.jar &
-        - wait_for 8080
-        - sleep 30
-        - http :8080/v1 string=one
-        - http :8080/v1 string=two
-        - http :8080/v1 string=three
-        - http :8080/v1
-        - http :8080
-        - http :8080/v1/people name=ololo
-        - http :8080/v1/people name=trololo
-        - http :8080/v1/people/2
-        - http :8080/v1/people
-        - stop_any 80 8080
-    - stage: test
-      jdk: openjdk8
-      name: maven updates
-      script: ./mvnw versions:display-property-updates
-    - stage: test
       jdk: openjdk11
-      name: test gradle (openjdk11)
+      name: gradle (openjdk11)
       script:
         - ./gradlew
         - java --add-modules java.se
@@ -114,8 +85,29 @@ jobs:
         - http :8080/v1/people
         - stop_any 80 8080
     - stage: test
+      jdk: openjdk8
+      name: maven (openjdk8)
+      script:
+        - ./mvnw -U
+        - ./mvnw -Pbundle
+        - java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
+                    -Djava.net.preferIPv4Stack=true
+                      ./target/*-microbundle.jar &
+        - wait_for 8080
+        - sleep 30
+        - http :8080/v1 string=one
+        - http :8080/v1 string=two
+        - http :8080/v1 string=three
+        - http :8080/v1
+        - http :8080
+        - http :8080/v1/people name=ololo
+        - http :8080/v1/people name=trololo
+        - http :8080/v1/people/2
+        - http :8080/v1/people
+        - stop_any 80 8080
+    - stage: test
       jdk: openjdk11
-      name: test maven (openjdk11)
+      name: maven (openjdk11)
       script:
         - ./mvnw -f ./pom-jdk11.xml -U >/dev/null
         - ./mvnw -f ./pom-jdk11.xml -Pbundle
@@ -149,9 +141,17 @@ jobs:
       name: gradle updates (openjdk11)
       script: ./gradlew dependencyUpdates -Drevision=release
     - stage: test
+      jdk: openjdk8
+      name: gradle updates
+      script: ./gradlew dependencyUpdates -Drevision=release
+    - stage: test
       jdk: openjdk11
       name: maven updates (openjdk11)
       script: ./mvnw versions:display-property-updates -f ./pom-jdk11.xml
+    - stage: test
+      jdk: openjdk8
+      name: maven updates
+      script: ./mvnw versions:display-property-updates
 cache:
   pip: true
   packages: true
