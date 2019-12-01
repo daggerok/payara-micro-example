@@ -14,7 +14,7 @@ object Globals {
   const val microprofileVersion = "3.2"
   const val payaraMicroVersion = "5.192"
   const val jacksonVersion = "2.10.1"
-  const val junitJupiterVersion = "5.5.2"
+  const val junitJupiterVersion = "5.6.0-M1"
   const val materializecssVersion = "1.0.0"
   const val materialDesignIconsVersion = "3.0.1"
 
