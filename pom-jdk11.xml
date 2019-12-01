@@ -18,7 +18,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <h2.version>1.4.199</h2.version>
+    <h2.version>1.4.200</h2.version>
     <jaxb.version>2.3.0</jaxb.version>
     <log4j.version>2.12.1</log4j.version>
     <javaee.version>8.0.1</javaee.version>
@@ -42,12 +42,6 @@
     <payara-micro-maven-plugin.version>1.0.6</payara-micro-maven-plugin.version>
     <jackson-jaxrs-json-provider.version>2.10.1</jackson-jaxrs-json-provider.version>
   </properties>
-
-  <!--
-    ./mvnw versions:display-property-updates -DallowAnyUpdates=false -DallowIncrementalUpdates=false -DallowSnapshots=false
-    ./mvnw versions:display-dependency-updates -DallowIncrementalUpdates=false -DallowSnapshots=false
-    ./mvnw versions:display-plugin-updates
-  -->
 
   <dependencyManagement>
     <dependencies>

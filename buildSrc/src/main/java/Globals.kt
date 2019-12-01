@@ -18,7 +18,7 @@ object Globals {
   const val materializecssVersion = "1.0.0"
   const val materialDesignIconsVersion = "3.0.1"
 
-  const val h2Version = "1.4.199"
+  const val h2Version = "1.4.200"
   const val javaxPersistenceVersion = "2.2"
 
   const val javaxAnnotationApiVersion = "1.3.2"
