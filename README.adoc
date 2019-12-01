@@ -34,7 +34,11 @@ java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 
 http :8080/v1 string=one
 http :8080/v1 string=two
 http :8080/v1 string=3
-# output:
+----
+
+.test
+[source,http]
+----
 HTTP/1.1 202 Accepted
 Content-Length: 0
 Server: Payara Micro #badassfish
@@ -42,10 +46,14 @@ X-Frame-Options: SAMEORIGIN
 ----
 
 .test
-[source,http request]
+[source,bash]
 ----
 http :8080/v1
-# output
+----
+
+.test
+[source,http]
+----
 HTTP/1.1 200 OK
 Content-Length: 17
 Content-Type: application/json
