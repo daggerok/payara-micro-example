@@ -8,6 +8,7 @@ jdk: openjdk8
 node_js: lts/*
 python: 3.7
 os: linux
+arch: amd64
 addons:
   apt:
     update: true
@@ -88,7 +89,7 @@ jobs:
       jdk: openjdk8
       name: maven (openjdk8)
       script:
-        - ./mvnw -U
+        - ./mvnw
         - ./mvnw -Pbundle
         - java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005
                     -Djava.net.preferIPv4Stack=true
@@ -109,8 +110,8 @@ jobs:
       jdk: openjdk11
       name: maven (openjdk11)
       script:
-        - ./mvnw -f ./pom-jdk11.xml -U >/dev/null
-        - ./mvnw -f ./pom-jdk11.xml -Pbundle
+        - ./mvnw
+        - ./mvnw -Pbundle
         - java --add-modules java.se
                --add-exports java.base/jdk.internal.ref=ALL-UNNAMED
                --add-opens java.base/java.lang=ALL-UNNAMED
@@ -147,7 +148,7 @@ jobs:
     - stage: test
       jdk: openjdk11
       name: maven updates (openjdk11)
-      script: ./mvnw versions:display-property-updates -f ./pom-jdk11.xml
+      script: ./mvnw versions:display-property-updates
     - stage: test
       jdk: openjdk8
       name: maven updates

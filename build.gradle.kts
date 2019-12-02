@@ -40,11 +40,8 @@ dependencies {
   providedCompile("javax.persistence:javax.persistence-api:${Globals.javaxPersistenceVersion}")
 
   if (isAfterJdk8()) { // JDK > 1.8
-    implementation("javax.annotation:javax.annotation-api:${Globals.javaxAnnotationApiVersion}")
     implementation("javax.xml.bind:jaxb-api:${Globals.jaxbApiVersion}")
     implementation("org.glassfish.jaxb:jaxb-runtime:${Globals.jaxbRuntimeVersion}")
-    implementation("org.javassist:javassist:${Globals.javassistVersion}")
-    implementation("cglib:cglib-nodep:${Globals.cglibVersion}")
   }
 
   implementation(platform("org.junit:junit-bom:${Globals.junitJupiterVersion}"))
