@@ -1,5 +1,5 @@
 object Globals {
-  const val version = "3.0.5-SNAPSHOT"
+  const val version = "3.0.6-SNAPSHOT"
   const val groupId = "com.github.daggerok.payaramicro"
 
   const val gradleWrapperVersion = "6.0.1"

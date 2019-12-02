@@ -1,4 +1,3 @@
-
 plugins {
   idea
   `kotlin-dsl`
@@ -14,7 +13,7 @@ repositories {
 
 idea {
   module {
-    isDownloadJavadoc = false
-    isDownloadSources = false
+    isDownloadJavadoc = true
+    isDownloadSources = true
   }
 }
